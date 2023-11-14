@@ -5,7 +5,7 @@ namespace Ductong\BaseMvc\Controllers\Admin;
 use Ductong\BaseMvc\Controller;
 use Ductong\BaseMvc\Models\Category;
 
-class CategoryController extends Controller {
+class Producttroller extends Controller {
 
     /* Lấy danh sách */
     public function index() {
