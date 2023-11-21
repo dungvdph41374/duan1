@@ -16,7 +16,7 @@
                         <li class="breadcrumb-item">
                             <a href="/admin/dashboard"><i class="feather icon-home"></i></a>
                         </li>
-                        <li class="breadcrumb-item"><a href="#!">Category</a> </li>
+                        <li class="breadcrumb-item"><a href="#!">Category đô đức </a> </li>
                     </ul>
                 </div>
             </div>
