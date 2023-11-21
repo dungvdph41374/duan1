@@ -1,32 +1,59 @@
 <?php 
 
-namespace Ductong\BaseMvc\Controllers\Admin;
+namespace Vujung\Duan1\Controllers\Admin;
 
-use Ductong\BaseMvc\Controller;
-use Ductong\BaseMvc\Models\Category;
+use Vujung\Duan1\Controller;
+use Vujung\Duan1\Models\Category;
+use Vujung\Duan1\Models\Product;
 
-class Producttroller extends Controller {
+class ProductController extends Controller {
 
     /* Lấy danh sách */
     public function index() {
-        $categories = (new Category())->all();
+        $products = (new Product())->all();
 
-        $this->render("admin/categories/index", ["categories" => $categories]);
+        $this->renderAdmin("products/index", ["products" => $products]);
     }
 
     /* Thêm mới */
     public function create() {
         if (isset($_POST["btn-submit"])) { 
             $data = [
+                'category_id' => $_POST['category_id'],
                 'name' => $_POST['name'],
+                'price' => $_POST['price'],
+                'price_sale' => $_POST['price_sale'] ?: 0,
+                'description' => $_POST['description'],
+                'is_active' => $_POST['is_active'],
             ];
 
-            (new Category())->insert($data);
+            $data['img'] = null;
+            $img = $_FILES['img'] ?? null;
+            if ($img) {
 
-            header('Location: /admin/categories');
+                // Đường dẫn lưu DB vì thư mục upload cùng cấp với index.php
+                // Khi lưu vào DB, chú ý là trước uploads có dấu /
+                $pathSaveDB = '/uploads/' . $img['name'];
+
+                // Đường dẫn upload có thêm __DIR__ . '/../../../'
+                // vì File ProductController của mình đang cách thư mục uploads 3 cấp
+                // Nên sẽ thấy có 3 lần ../
+                // __DIR__ là 2 const mặc định của PHP để lấy ra đường dẫn thư mục hiện tại của ProductController 
+                $pathUpload = __DIR__ . '/../../../uploads/' . $img['name'];
+
+                if (move_uploaded_file($img['tmp_name'], $pathUpload)) { 
+                    $data['img'] = $pathSaveDB;
+                } 
+            }
+
+            (new Product())->insert($data);
+
+            header('Location: /admin/products');
         }
 
-        $this->render("admin/categories/create");
+        $categories = (new Category())->all();
+
+        $this->renderAdmin("products/create", ["categories" => $categories]);
     }
 
     /* Cập nhật */
@@ -34,19 +61,47 @@ class Producttroller extends Controller {
 
         if (isset($_POST["btn-submit"])) { 
             $data = [
+                'category_id' => $_POST['category_id'],
                 'name' => $_POST['name'],
+                'price' => $_POST['price'],
+                'price_sale' => $_POST['price_sale'] ?: 0,
+                'description' => $_POST['description'],
+                'is_active' => $_POST['is_active'],
             ];
+
+            $data['img'] = $_POST['img_current'];
+            $img = $_FILES['img'] ?? null;
+            $flag = false;
+            if ($img) {
+
+                $pathSaveDB = '/uploads/' . $img['name'];
+                $pathUpload = __DIR__ . '/../../../uploads/' . $img['name'];
+
+                if (move_uploaded_file($img['tmp_name'], $pathUpload)) { 
+                    $data['img'] = $pathSaveDB;
+                    $flag = true;
+                } 
+            }
 
             $conditions = [
                 ['id', '=', $_GET['id']],
             ];
 
-            (new Category())->update($data, $conditions);
+            (new Product())->update($data, $conditions);
+            
+            if ($flag) {
+
+                // Xóa file dùng hàm unlink 
+                // Path file cũng phải giống như $pathUpload
+                $pathFile = __DIR__ .'/../../..'. $_POST['img_current'];
+                unlink($pathFile);
+            }
         }
 
-        $category = (new Category())->findOne($_GET["id"]);
+        $categories = (new Category())->all();
+        $product = (new Product())->findOne($_GET["id"]);
 
-        $this->render("admin/categories/update", ["category" => $category]);
+        $this->renderAdmin("products/update", ["product" => $product, 'categories' => $categories]);
     }
 
     /* Xóa */
@@ -55,8 +110,11 @@ class Producttroller extends Controller {
             ['id', '=', $_GET['id']],
         ];
 
-        (new Category())->delete($conditions);
+        (new Product())->delete($conditions);
 
-        header('Location: /admin/categories');
+        $pathFile = __DIR__ .'/../../..'. $_POST['img'];
+        unlink($pathFile);
+
+        header('Location: /admin/products');
     }
 }
