@@ -1,6 +1,6 @@
 <?php
 
-namespace Ductong\BaseMvc;
+namespace Vujung\Duan1;
 
 class Model
 {

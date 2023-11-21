@@ -1,8 +1,8 @@
 <?php
 
-namespace Ductong\BaseMvc\Models;
+namespace Vujung\Duan1\Models;
 
-use Ductong\BaseMvc\Model;
+use Vujung\Duan1\Model;
 
 class User extends Model {
     protected $table = 'users';

@@ -1,18 +1,9 @@
 {
-    "name": "ductong/base-mvc",
+    "name": "vujung/duan1",
     "autoload": {
         "psr-4": {
-            "Ductong\\BaseMvc\\": "src/"
-        },
-        "files": [
-            "global.php"
-        ]
-    },
-    "authors": [
-        {
-            "name": "Tống Văn Đức",
-            "email": "tongduc315@gmail.com"
+            "Vujung\\Duan1\\": "src/"
         }
-    ],
+    },
     "require": {}
 }
