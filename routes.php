@@ -1,13 +1,15 @@
 <?php
 
-use Ductong\BaseMvc\Controllers\Admin\UserController;
-use Ductong\BaseMvc\Controllers\Admin\CategoryController;
-use Ductong\BaseMvc\Controllers\Client\HomeController;
-use Ductong\BaseMvc\Router;
+use Vujung\Duan1\Controllers\Admin\UserController;
+use Vujung\Duan1\Controllers\Admin\CategoryController;
+use Vujung\Duan1\Controllers\Admin\DashboardController;
+use Vujung\Duan1\Controllers\Client\HomeController;
+use Vujung\Duan1\Router;
 
 $router = new Router();
 
 $router->addRoute('/', HomeController::class, 'index');
+$router->addRoute('/admin/dashboard', DashboardController::class, 'index');
 
 $router->addRoute('/admin/users', UserController::class, 'index');
 $router->addRoute('/admin/users/create', UserController::class, 'create');
